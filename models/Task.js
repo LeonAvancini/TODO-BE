@@ -1,5 +1,5 @@
-import mongoose = require("mongoose");
-import Joi = require("joi");
+const mongoose = require("mongoose");
+const Joi = require("joi");
 
 const taskSchema = new mongoose.Schema({
   title: {
@@ -25,4 +25,4 @@ const validateTask = (task) => {
   return schema.validate(task);
 };
 
-export { Task, validateTask };
+module.exports = { Task, validateTask };

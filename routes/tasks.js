@@ -1,5 +1,6 @@
-import express from "express";
-import { Task, validateTask } from "../models/Task";
+const express = require("express");
+const auth = require("../middleware/auth");
+const { Task, validateTask } = require("../models/Task");
 
 const router = express.Router();
 
@@ -21,7 +22,7 @@ router.get("/:id?", async (req, res) => {
 });
 
 //POST
-router.post("/", async (req, res) => {
+router.post("/", auth, async (req, res) => {
   const { error } = validateTask(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
@@ -37,7 +38,7 @@ router.post("/", async (req, res) => {
 });
 
 // PUT
-router.put("/:id", async (req, res) => {
+router.put("/:id", auth, async (req, res) => {
   try {
     const { error } = validateTask(req.body);
     if (error) return res.status(400).send(error.details[0].message);
@@ -53,7 +54,7 @@ router.put("/:id", async (req, res) => {
 
     if (!task) return res.status(404).send("Task not found");
 
-    res.send(task);
+    res.send("Task updated successfully");
   } catch (error) {
     console.error("Error updating task:", error);
     res.status(500).send("Internal Server Error");
@@ -61,7 +62,7 @@ router.put("/:id", async (req, res) => {
 });
 
 // DELETE
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", auth, async (req, res) => {
   try {
     const task = await Task.findByIdAndDelete(req.params.id);
     if (!task) return res.status(404).send("Task not found");
