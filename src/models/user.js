@@ -19,7 +19,7 @@ userSchema.methods.generateAuthToken = function () {
     {
       _id: this._id,
     },
-    "todoappsecretkey"
+    process.env.JWT_PRIVATE_KEY
   );
   return token;
 };

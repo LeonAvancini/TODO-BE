@@ -1,22 +1,31 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const tasks = require("../routes/tasks");
-const auth = require("../routes/auth");
-const users = require("../routes/users");
 
 const port = 3000;
 
 const app = express();
-app.use(express.json());
 
-mongoose
-  .connect("mongodb://localhost:27017/todoappdb")
-  .then(() => console.log("Connected to Vidly database..."));
+require("./routes")(app);
+
+if (!process.env.JWT_PRIVATE_KEY) {
+  throw new Error("FATAL ERROR: jwtPrivateKey is not defined");
+}
+
+process.on("uncaughtException", (ex) => {
+  console.error(ex.message, ex);
+  process.exit(1);
+});
+
+process.on("unhandledRejection", (ex) => {
+  console.error(ex.message, ex);
+  process.exit(1);
+});
 
 app.listen(port, () => {
   return console.log(`Express is listening at http://localhost:${port}`);
 });
 
-app.use("/api/tasks", tasks);
-app.use("/api/auth", auth);
-app.use("/api/users", users);
+// DB connection
+mongoose
+  .connect("mongodb://localhost:27017/todoappdb")
+  .then(() => console.log("Connected to Vidly database..."));
