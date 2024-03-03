@@ -32,4 +32,4 @@ app.listen(port, () => {
 // DB connection
 mongoose
   .connect(process.env.DB_URI)
-  .then(() => console.log("Connected to Vidly database..."));
+  .then(() => console.log("Connected to todoapp database..."));

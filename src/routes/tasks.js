@@ -16,7 +16,6 @@ router.get("/:id?", async (req, res) => {
     const tasks = await Task.find();
     return res.send(tasks);
   } catch (error) {
-    console.error("Error fetching tasks:", error);
     res.status(500).send("Internal Server Error");
   }
 });
@@ -24,15 +23,14 @@ router.get("/:id?", async (req, res) => {
 //POST
 router.post("/", auth, async (req, res) => {
   const { error } = validateTask(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
+  if (error) return res.status(400).send(error.message);
 
   const task = new Task({
     title: req.body.title,
     description: req.body.description,
   });
 
-  const result = await task.save();
-  console.log("result", result);
+  await task.save();
 
   res.send(`Task created successfully`);
 });
@@ -41,7 +39,7 @@ router.post("/", auth, async (req, res) => {
 router.put("/:id", auth, async (req, res) => {
   try {
     const { error } = validateTask(req.body);
-    if (error) return res.status(400).send(error.details[0].message);
+    if (error) return res.status(400).send(error.message);
 
     const task = await Task.findByIdAndUpdate(
       req.params.id,
@@ -56,7 +54,6 @@ router.put("/:id", auth, async (req, res) => {
 
     res.send("Task updated successfully");
   } catch (error) {
-    console.error("Error updating task:", error);
     res.status(500).send("Internal Server Error");
   }
 });
@@ -69,7 +66,6 @@ router.delete("/:id", auth, async (req, res) => {
 
     res.send("Task deleted successfully");
   } catch (error) {
-    console.error("Error deleting task:", error);
     res.status(500).send("Internal Server Error");
   }
 });
