@@ -8,7 +8,11 @@ const app = express();
 require("./routes")(app);
 
 if (!process.env.JWT_PRIVATE_KEY) {
-  throw new Error("FATAL ERROR: jwtPrivateKey is not defined");
+  throw new Error("FATAL ERROR: jwt private key is not defined!");
+}
+
+if (!process.env.DB_URI) {
+  throw new Error("FATAL ERROR: DB URI is not defined!");
 }
 
 process.on("uncaughtException", (ex) => {
@@ -27,5 +31,5 @@ app.listen(port, () => {
 
 // DB connection
 mongoose
-  .connect("mongodb://localhost:27017/todoappdb")
+  .connect(process.env.DB_URI)
   .then(() => console.log("Connected to Vidly database..."));
